@@ -1,0 +1,13 @@
+.hidden {
+  display: none;
+}
+
+#timer-current-exercise {
+  font-size: 8rem;
+  margin: 0;
+}
+
+#timer-time-remaining {
+  font-size: 30vw;
+  margin: 0;
+}

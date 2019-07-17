@@ -1,11 +1,12 @@
-const textAreaSchedule = document.querySelector("#schedule");
-const buttonCreateSchedule = document.querySelector("#button-create-timer");
+const divScheduleCreate = document.querySelector(".schedule-create");
+const scheduleCreateTextAreaSchedule = document.querySelector("#schedule-create-input");
+const scheduleCreatebuttonCreateSchedule = document.querySelector("#schedule-create-button-create-timer");
 
 let exercises = [];
 
-buttonCreateSchedule.addEventListener("click", function() {
+scheduleCreatebuttonCreateSchedule.addEventListener("click", function() {
   try {
-    const schedule = textAreaSchedule.value;
+    const schedule = scheduleCreateTextAreaSchedule.value;
     if (schedule.length == 0) throw "No schedule input.";
 
     // Parsing schedule
@@ -37,6 +38,7 @@ buttonCreateSchedule.addEventListener("click", function() {
       });
     }
 
+    divScheduleCreate.classList.add("hidden");
     createTimer(exercises);
   } catch (err) {
     alert(`Invalid Schedule: ${err}`);
@@ -63,20 +65,21 @@ function secondsToMinSeconds(time) {
   return `${minutes}:${seconds < 10 ? "0" + seconds.toString(10) : seconds}`;
 }
 
-const buttonPreviousPeriod = document.querySelector("#button-timer-previous-period");
-const buttonNextPeriod = document.querySelector("#button-timer-next-period");
-const buttonAdd10 = document.querySelector("#button-timer-add-10");
-const buttonSubtract10 = document.querySelector("#button-timer-subtract-10");
-const buttonPause = document.querySelector("#button-timer-pause");
-const labelCurrentExercise = document.querySelector("#current-exercise");
-const labelTimeRemaining = document.querySelector("#time-remaining");
+const divTimer = document.querySelector(".timer");
+const timerButtonPreviousPeriod = document.querySelector("#timer-button-previous-period");
+const timerButtonNextPeriod = document.querySelector("#timer-button-next-period");
+const timerButtonAdd10 = document.querySelector("#timer-button-add-10");
+const timerButtonSubtract10 = document.querySelector("#timer-button-subtract-10");
+const timerButtonPause = document.querySelector("#timer-button-pause");
+const timerLabelCurrentExercise = document.querySelector("#timer-current-exercise");
+const timerLabelTimeRemaining = document.querySelector("#timer-time-remaining");
 
 let timeRemaining = 0;
 let currentExerciseIndex = 0;
 let currentSetIndex = 0;
 let paused = true;
 
-buttonPreviousPeriod.addEventListener("click", function() {
+timerButtonPreviousPeriod.addEventListener("click", function() {
   if (currentExerciseIndex == 0 && currentSetIndex == 0) return;
   else {
     currentSetIndex--;
@@ -89,7 +92,7 @@ buttonPreviousPeriod.addEventListener("click", function() {
   refreshLabels();
 });
 
-buttonNextPeriod.addEventListener("click", nextPeriod);
+timerButtonNextPeriod.addEventListener("click", nextPeriod);
 
 function nextPeriod() {
   if (
@@ -108,7 +111,7 @@ function nextPeriod() {
   refreshLabels();
 }
 
-buttonSubtract10.addEventListener("click", function() {
+timerButtonSubtract10.addEventListener("click", function() {
   timeRemaining -= 10;
   if (timeRemaining <= 0) {
     timeRemaining = 1;
@@ -116,7 +119,7 @@ buttonSubtract10.addEventListener("click", function() {
   refreshLabels();
 });
 
-buttonAdd10.addEventListener("click", function() {
+timerButtonAdd10.addEventListener("click", function() {
   timeRemaining += 10;
   if (timeRemaining > exercises[currentExerciseIndex].sets[currentSetIndex]) {
     timeRemaining = exercises[currentExerciseIndex].sets[currentSetIndex];
@@ -124,11 +127,12 @@ buttonAdd10.addEventListener("click", function() {
   refreshLabels();
 });
 
-buttonPause.addEventListener("click", function() {
+timerButtonPause.addEventListener("click", function() {
   paused = !paused;
 });
 
 function createTimer(exercises) {
+  divTimer.classList.remove("hidden");
   timeRemaining = exercises[currentExerciseIndex].sets[currentSetIndex];
   refreshLabels();
 
@@ -142,6 +146,8 @@ function createTimer(exercises) {
 }
 
 function refreshLabels() {
-  labelCurrentExercise.innerHTML = `${exercises[currentExerciseIndex].name} : Set ${currentSetIndex + 1}`;
-  labelTimeRemaining.innerHTML = secondsToMinSeconds(timeRemaining);
+  timerLabelCurrentExercise.innerHTML = `${exercises[currentExerciseIndex].name} : Set ${currentSetIndex + 1}`;
+  timerLabelTimeRemaining.innerHTML = secondsToMinSeconds(timeRemaining);
 }
+
+function createSchedule(exercises) {}
