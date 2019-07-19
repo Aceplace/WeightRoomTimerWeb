@@ -1,13 +1,50 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
 .hidden {
   display: none;
 }
 
+.timer-container {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+}
+
+.timer {
+  background: #796e6e;
+  padding: 1em;
+  border-style: solid;
+}
+
 #timer-current-exercise {
-  font-size: 8rem;
-  margin: 0;
+  font-size: 6vw;
 }
 
 #timer-time-remaining {
   font-size: 30vw;
-  margin: 0;
+}
+
+.schedule {
+  padding: 1em;
+  border-style: solid;
+}
+
+#schedule-list {
+  list-style-type: none;
+}
+
+.selected {
+  color: #a52121;
+  font-weight: bolder;
+  font-style: italic;
+}
+
+li {
+  margin-bottom: 2em;
+}
+
+li > span {
+  margin-right: 1em;
 }

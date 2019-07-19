@@ -1,3 +1,28 @@
+/*
+Support Functions
+*/
+function checkIfTime(word) {
+  const timePattern = /^[1-9]?\d:\d\d$/;
+  return timePattern.test(word);
+}
+
+function minSecondsToSeconds(time) {
+  const splitTime = time.split(":");
+  const minutes = parseInt(splitTime[0]);
+  const seconds = parseInt(splitTime[1]);
+  if (seconds >= 60) throw "Seconds must be between 0 and 59";
+  return minutes * 60 + seconds;
+}
+
+function secondsToMinSeconds(time) {
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  return `${minutes}:${seconds < 10 ? "0" + seconds.toString(10) : seconds}`;
+}
+
+/*
+Schedule Input
+*/
 const divScheduleCreate = document.querySelector(".schedule-create");
 const scheduleCreateTextAreaSchedule = document.querySelector("#schedule-create-input");
 const scheduleCreatebuttonCreateSchedule = document.querySelector("#schedule-create-button-create-timer");
@@ -32,6 +57,7 @@ scheduleCreatebuttonCreateSchedule.addEventListener("click", function() {
           exerciseNameWords.push(currentWord);
         }
       }
+      if (setTimes.length == 0) throw "Each exercise needs atleast one set.";
       exercises.push({
         name: exerciseNameWords.join(" "),
         sets: setTimes
@@ -46,25 +72,9 @@ scheduleCreatebuttonCreateSchedule.addEventListener("click", function() {
   }
 });
 
-function checkIfTime(word) {
-  const timePattern = /^[1-9]?\d:\d\d$/;
-  return timePattern.test(word);
-}
-
-function minSecondsToSeconds(time) {
-  const splitTime = time.split(":");
-  const minutes = parseInt(splitTime[0]);
-  const seconds = parseInt(splitTime[1]);
-  if (seconds >= 60) throw "Seconds must be between 0 and 59";
-  return minutes * 60 + seconds;
-}
-
-function secondsToMinSeconds(time) {
-  const minutes = Math.floor(time / 60);
-  const seconds = time % 60;
-  return `${minutes}:${seconds < 10 ? "0" + seconds.toString(10) : seconds}`;
-}
-
+/*
+Schedule Playback
+*/
 const divTimer = document.querySelector(".timer");
 const timerButtonPreviousPeriod = document.querySelector("#timer-button-previous-period");
 const timerButtonNextPeriod = document.querySelector("#timer-button-next-period");
@@ -74,11 +84,72 @@ const timerButtonPause = document.querySelector("#timer-button-pause");
 const timerLabelCurrentExercise = document.querySelector("#timer-current-exercise");
 const timerLabelTimeRemaining = document.querySelector("#timer-time-remaining");
 
+const divSchedule = document.querySelector(".schedule");
+const listSchedule = document.querySelector("#schedule-list");
+
 let timeRemaining = 0;
 let currentExerciseIndex = 0;
 let currentSetIndex = 0;
 let paused = true;
 
+function createTimer(exercises) {
+  divTimer.classList.remove("hidden");
+  divSchedule.classList.remove("hidden");
+  timeRemaining = exercises[currentExerciseIndex].sets[currentSetIndex];
+  createSchedule();
+  refreshLabels();
+
+  setInterval(function() {
+    if (!paused) {
+      timeRemaining--;
+      if (timeRemaining < 1) {
+        timeRemaining = 0;
+        nextPeriod();
+      }
+      refreshLabels();
+    }
+  }, 1000);
+}
+
+function createSchedule() {
+  let output = "";
+  for (let i = 0; i < exercises.length; i++) {
+    let setOutput = "";
+    for (let j = 0; j < exercises[i].sets.length; j++) {
+      setOutput += `<span>${secondsToMinSeconds(exercises[i].sets[j])}</span>`;
+    }
+    output += `
+    <li class="schedule-list-item"><span>${exercises[i].name}</span><br>${setOutput}</li>
+    `;
+  }
+  listSchedule.innerHTML = output;
+}
+
+function refreshLabels() {
+  timerLabelCurrentExercise.innerHTML = `${exercises[currentExerciseIndex].name} : Set ${currentSetIndex + 1}`;
+  timerLabelTimeRemaining.innerHTML = secondsToMinSeconds(timeRemaining);
+
+  const listItems = listSchedule.querySelectorAll("li");
+  for (let i = 0; i < exercises.length; i++) {
+    const listItem = listItems[i];
+    if (currentExerciseIndex == i) {
+      listItem.firstChild.classList.add("selected");
+    } else {
+      listItem.firstChild.classList.remove("selected");
+    }
+    for (let j = 0; j < exercises[i].sets.length; j++) {
+      if (currentExerciseIndex == i && currentSetIndex == j) {
+        listItem.childNodes[j + 2].classList.add("selected");
+      } else {
+        listItem.childNodes[j + 2].classList.remove("selected");
+      }
+    }
+  }
+}
+
+/*
+Time playback
+*/
 timerButtonPreviousPeriod.addEventListener("click", function() {
   if (currentExerciseIndex == 0 && currentSetIndex == 0) return;
   else {
@@ -130,24 +201,3 @@ timerButtonAdd10.addEventListener("click", function() {
 timerButtonPause.addEventListener("click", function() {
   paused = !paused;
 });
-
-function createTimer(exercises) {
-  divTimer.classList.remove("hidden");
-  timeRemaining = exercises[currentExerciseIndex].sets[currentSetIndex];
-  refreshLabels();
-
-  setInterval(function() {
-    if (!paused) {
-      timeRemaining--;
-      if (timeRemaining < 1) nextPeriod();
-      refreshLabels();
-    }
-  }, 1000);
-}
-
-function refreshLabels() {
-  timerLabelCurrentExercise.innerHTML = `${exercises[currentExerciseIndex].name} : Set ${currentSetIndex + 1}`;
-  timerLabelTimeRemaining.innerHTML = secondsToMinSeconds(timeRemaining);
-}
-
-function createSchedule(exercises) {}

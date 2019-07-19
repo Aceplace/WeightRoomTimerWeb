@@ -18,15 +18,21 @@
       <br />
     </div>
 
-    <div class="timer hidden">
-      <button type="button" id="timer-button-previous-period">Previous Period</button>
-      <button type="button" id="timer-button-add-10">&lt;&lt;</button>
-      <button type="button" id="timer-button-pause">&gt;</button>
-      <button type="button" id="timer-button-subtract-10">&gt;&gt;</button>
-      <button type="button" id="timer-button-next-period">Next Period</button>
+    <div class="timer-container">
+      <div class="timer hidden">
+        <button type="button" id="timer-button-previous-period">Previous Period</button>
+        <button type="button" id="timer-button-add-10">&lt;&lt;</button>
+        <button type="button" id="timer-button-pause">&gt;</button>
+        <button type="button" id="timer-button-subtract-10">&gt;&gt;</button>
+        <button type="button" id="timer-button-next-period">Next Period</button>
 
-      <h1 id="timer-current-exercise">Current Exercise</h1>
-      <h1 id="timer-time-remaining">0:00</h1>
+        <h1 id="timer-current-exercise">Current Exercise</h1>
+        <h1 id="timer-time-remaining">0:00</h1>
+      </div>
+
+      <div class="schedule hidden">
+        <ol id="schedule-list"></ol>
+      </div>
     </div>
 
     <script src="timer.js"></script>
