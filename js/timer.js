@@ -87,6 +87,9 @@ const timerLabelTimeRemaining = document.querySelector("#timer-time-remaining");
 const divSchedule = document.querySelector(".schedule");
 const listSchedule = document.querySelector("#schedule-list");
 
+const beepThreeSound = document.querySelector("#sound-beep-three");
+const boxingBellSound = document.querySelector("#sound-boxing-bell");
+
 let timeRemaining = 0;
 let currentExerciseIndex = 0;
 let currentSetIndex = 0;
@@ -102,8 +105,12 @@ function createTimer(exercises) {
   setInterval(function() {
     if (!paused) {
       timeRemaining--;
+      if (timeRemaining == 20) {
+        beepThreeSound.play();
+      }
       if (timeRemaining < 1) {
         timeRemaining = 0;
+        boxingBellSound.play();
         nextPeriod();
       }
       refreshLabels();
